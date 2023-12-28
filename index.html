@@ -1,0 +1,23 @@
+<html>
+	<head>
+		<title>LLM Typer</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+	</head>
+	<body>
+
+		<p id="inputfield" contenteditable="true" placeholder="Tap here to type..."></p>
+		<p>
+			<span class="btn" onclick="resetText()">&#x274c; Clear all</span>
+			<span id="spinner"><img src="lib/spinner.svg"/></span>
+		</p>
+		  <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
+    </script>
+		<script src="lib/diff.min.js"></script>
+		<script src="script.js" type="module"></script>
+	</body>
+</html>

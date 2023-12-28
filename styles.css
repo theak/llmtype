@@ -1,0 +1,61 @@
+:root {
+  --hl-color: #CBC3E3; /* Define a variable named --hl color */
+}
+body {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  background: #FFF0C3;
+  padding: 100px;
+}
+
+p {
+  font-family: Tahoma, Geneva, sans-serif;
+  font-size: 36px;
+  line-height: 1.6em; /* Block Display */
+  letter-spacing: .06em;
+}
+
+.highlight[data-previous] {
+  display: inline-block;
+  padding: 0.1;
+  position: relative;
+  background: var(--hl-color);
+  cursor: pointer;
+}
+
+/* Before pseudo-element for the callout */
+.highlight[data-previous]:hover::before {
+  content: attr(data-previous); /* This gets the text from data-popup attribute */
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px;
+  background: #f9f9f9;
+  border: 1px solid #dcdcdc;
+  border-radius: 5px;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+
+#inputfield[placeholder]:empty:before {
+    content: attr(placeholder);
+    color: #555; 
+}
+
+#spinner {
+  display: none;
+  opacity: 0.3;
+}
+
+.btn {
+  font-size: 10px;
+  text-align: center;
+  background-color: #FFF;
+  border-radius: 5px;
+  color: #666;
+  padding: 10px;
+  cursor: pointer;
+}
