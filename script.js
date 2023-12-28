@@ -2,7 +2,6 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const KEY = "QUl6YVN5Qm9OcEFQZXRQZzFXeFJieURlYTdtMXNYVGVTSUVGbHJr";
 const genAI = new GoogleGenerativeAI(atob(KEY));
-
 const model = genAI.getGenerativeModel({ model: "gemini-pro"});
 
 let prompt = "The following text was typed quickly on a mobile phone. Proofread it for typos and grammatical errors. Return only the corrected text and nothing else. ";
