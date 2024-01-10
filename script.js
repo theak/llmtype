@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (editable.innerText.trim() !== '') {
                 proofread();
             }
-        }, 1500);
+        }, 1000);
     });
     placeCursorAtEnd(editable);
 });
