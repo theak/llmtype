@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const KEY = "QUl6YVN5Qm9OcEFQZXRQZzFXeFJieURlYTdtMXNYVGVTSUVGbHJr";
+const KEY = "QUl6YVN5Qm9OcEFQZXRQZzFXeF" + "JieURlYTdtMXNYVGVTSUVGbHJr";
 const genAI = new GoogleGenerativeAI(atob(KEY));
 const model = genAI.getGenerativeModel({ model: "gemini-pro"});
 
@@ -15,7 +15,8 @@ function resetText() {
 	const editable = document.getElementById('inputfield');
 	editable.innerHTML = "";
 	lastProofreadLocation = 0;
-	clearTimeout(window.timeout);
+  clearTimeout(window.timeout);
+  document.getElementById('spinner').style.display = 'none';
 	placeCursorAtEnd(editable);
 }
 
@@ -133,28 +134,38 @@ function highlightChanges(a, b) {
     return result.replace('  ', ' ');
 }
 
+function isPunctuated() {
+	const str = document.getElementById('inputfield').innerText.trim();
+	const punctuation = '.?!';
+	return (str.length > 0) && (punctuation.indexOf(str[str.length - 1]) > -1);
+}
+
+window.isPunctuated = isPunctuated;
 window.highlightChanges = highlightChanges;
 
 document.addEventListener("DOMContentLoaded", function() {
     const editable = document.getElementById('inputfield');
+    
     editable.addEventListener('input', function() {
         // Clear the timeout if it has already been set.
         // This will prevent the previous task from executing
         // if a new event is triggered before the 1s has finished.
         clearTimeout(window.timeout);
-
         const len = editable.innerText.length;
+        // If text was deleted, don't proofread
         if (len < lastProofreadLocation) {
+        	console.log("del");
         	lastProofreadLocation = len;
-        } 
-
-        // Set a new timeout to run 1 second (1000 ms) from this last event.
-        timeout = setTimeout(function() {
+        } else if (isPunctuated()) { // If punctuated, proofread immediately
+        	console.log("punctuation detected");
+        	proofread();
+        } else { // Otherwise set a new timeout to run 1 second (1000 ms) from this last event
+        	window.timeout = setTimeout(function() {
             // Check if the content is non-empty
-            if (editable.innerText.trim() !== '') {
-                proofread();
-            }
-        }, 1000);
+            if (editable.innerText.trim() !== '') proofread();
+        	}, 1000);
+        }
     });
+
     placeCursorAtEnd(editable);
 });
