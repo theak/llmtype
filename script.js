@@ -10,6 +10,7 @@ prompt += "TEXT: "
 let lastProofreadLocation = 0; // Track until where the text has been proofread
 
 window.timeout = null;
+window.currentProofreadLocation = -1;
 
 function resetText() {
 	const editable = document.getElementById('inputfield');
@@ -25,23 +26,30 @@ window.resetText = resetText;
 async function proofread() {
 	const editable = document.getElementById('inputfield');
 	const textToProofread = editable.innerText;
-	const trailingSpace = editable.innerText[editable.innerText.length - 1] === " ";
+	
 
-	if (lastProofreadLocation > (textToProofread.length - 5)) return; // Ensure at least 5 chars typed
+	if (window.currentProofreadLocation > -1 || lastProofreadLocation > (textToProofread.length - 5)) return; // Ensure at least 5 chars typed
 
 	console.log(prompt + textToProofread);
 	// Show spinner
 	document.getElementById('spinner').style.display = 'inline';
+	window.currentProofreadLocation = textToProofread.length;
 
 	const result = await model.generateContent(prompt + textToProofread);
 	const response = await result.response;
 	let proofreadResponse = response.text();
 
+	console.log("Response: " + proofreadResponse);
+	const newText = editable.innerText;
+	const trailingSpace = editable.innerHTML[editable.innerHTML.length - 1] === " ";
+
+	const textTypedWhileProofreading = " " + newText.substr(textToProofread.length);
+
+	editable.innerHTML = highlightChanges(textToProofread, proofreadResponse).trim() + textTypedWhileProofreading + (trailingSpace?" ":"");
+
+	window.currentProofreadLocation = -1;
 	// Hide spinner
 	document.getElementById('spinner').style.display = 'none';
-
-	console.log(proofreadResponse);
-	editable.innerHTML = highlightChanges(textToProofread, proofreadResponse).trim() + (trailingSpace?" ":"");
 
 	Array.from(document.getElementsByClassName("highlight")).forEach(highlight =>  {
 	  highlight.addEventListener('click', (event) => {
